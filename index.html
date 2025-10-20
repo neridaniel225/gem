@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -309,12 +310,12 @@
                             <div><div class="question-title">Suis-je un membre actif ?</div><div class="question-subtitle">Implication et service</div></div>
                         </div>
                         <div class="status-badge">
-                            <svg id="smiley-active" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                            <span class="status-text color-blue" id="status-active">Bon</span>
+                            <svg id="smiley-activeMenber" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="status-text color-blue" id="status-activeMenber">Bon</span>
                         </div>
                     </div>
-                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-active" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="slider-active"></div>
-                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-active">50%</div><span class="slider-label">100%</span></div>
+                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-activeMenber" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="activeMember"></div>
+                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-activeMenber">50%</div><span class="slider-label">100%</span></div>
                 </div>
                 <div class="question-card">
                     <div class="question-header">
@@ -388,17 +389,15 @@
 
     // Fonction pour obtenir le SVG du smiley
     function getSmileyPath(value) {
-    if (value < 25) {
-        // TRISTE - bouche vers le bas
-        return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 16s1.5-2 4-2 4 2 4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
-    } else if (value < 50) {
-        // NEUTRE - ligne droite
-        return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><line x1="8" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
-    } else {
-        // SOURIANT - bouche vers le haut
-        return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+        if (value < 25) {
+            return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 16s1.5-2 4-2 4 2 4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+        } else if (value < 50) {
+            return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><line x1="8" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+        } else {
+            return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+        }
     }
-}
+
     // Fonction pour obtenir le score de l'église
     function getChurchScore(attendance) {
         const scores = {
