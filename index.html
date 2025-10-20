@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Évaluation Personnelle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+            padding: clamp(12px, 4vw, 32px);
+            padding-bottom: clamp(80px, 20vw, 120px);
+        }
+        .container { width: 100%; max-width: 480px; margin: 0 auto; }
+        #evaluation-form {
+            background-color: white;
+            border-radius: clamp(16px, 4vw, 24px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: clamp(20px, 5vw, 40px);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #dbeafe;
+            padding-bottom: clamp(20px, 4vh, 32px);
+            margin-bottom: clamp(24px, 5vh, 32px);
+        }
+        .header-icon {
+            display: inline-block;
+            padding: clamp(12px, 3vw, 16px);
+            background-color: #2563eb;
+            border-radius: 16px;
+            margin-bottom: clamp(12px, 3vh, 16px);
+        }
+        .header-icon svg { width: clamp(32px, 8vw, 48px); height: clamp(32px, 8vw, 48px); fill: white; }
+        h1 {
+            font-size: clamp(22px, 6vw, 40px);
+            font-weight: 900;
+            color: #1e3a8a;
+            margin-bottom: clamp(8px, 2vh, 12px);
+            line-height: 1.2;
+        }
+        .subtitle { color: #2563eb; font-size: clamp(13px, 3.5vw, 18px); font-weight: 500; }
+        .questions { display: flex; flex-direction: column; gap: clamp(16px, 4vw, 24px); }
+        .question-card {
+            background-color: white;
+            padding: clamp(16px, 4vw, 24px);
+            border-radius: 16px;
+            border: 2px solid #dbeafe;
+            transition: all 0.3s ease;
+        }
+        .question-card:hover { border-color: #3b82f6; }
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: clamp(12px, 3vw, 16px);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .question-left {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 2vw, 12px);
+            flex: 1;
+            min-width: 150px;
+        }
+        .question-icon {
+            padding: clamp(8px, 2vw, 12px);
+            background-color: #2563eb;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .question-icon svg {
+            width: clamp(20px, 5vw, 24px);
+            height: clamp(20px, 5vw, 24px);
+            fill: white;
+            stroke: white;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .question-title {
+            font-size: clamp(14px, 4vw, 18px);
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        .question-subtitle { font-size: clamp(11px, 2.5vw, 13px); color: #2563eb; }
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 2vw, 12px);
+            background-color: #eff6ff;
+            padding: clamp(8px, 2vw, 12px);
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+        }
+        .status-badge svg { width: clamp(20px, 5vw, 24px); height: clamp(20px, 5vw, 24px); }
+        .status-text { font-weight: 700; font-size: clamp(13px, 3.5vw, 16px); }
+        .slider-container { position: relative; margin-bottom: 12px; }
+        .progress-bar {
+            height: clamp(12px, 3vw, 16px);
+            background-color: #dbeafe;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #3b82f6, #2563eb);
+            transition: width 0.5s ease-out;
+        }
+        input[type="range"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .slider-labels { display: flex; justify-content: space-between; align-items: center; }
+        .slider-label { font-size: clamp(11px, 2.5vw, 13px); color: #2563eb; font-weight: 500; }
+        .percentage-badge {
+            padding: clamp(4px, 1vw, 6px) clamp(12px, 3vw, 16px);
+            background-color: #2563eb;
+            color: white;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: clamp(12px, 3vw, 14px);
+        }
+        .church-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(8px, 2vw, 12px);
+            margin-bottom: clamp(12px, 3vw, 16px);
+        }
+        .church-btn {
+            padding: clamp(12px, 3vw, 16px);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: clamp(11px, 2.8vw, 14px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-color: white;
+            color: #1e3a8a;
+            border: 2px solid #dbeafe;
+            text-align: center;
+        }
+        .church-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            transform: scale(1.02);
+        }
+        .church-btn:hover { border-color: #3b82f6; }
+        .church-emoji { font-size: clamp(18px, 5vw, 24px); display: block; margin-bottom: 4px; }
+        .church-score {
+            background-color: #eff6ff;
+            border-radius: 12px;
+            padding: clamp(12px, 3vw, 16px);
+            border: 2px solid #dbeafe;
+        }
+        .church-score-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .church-score-label { font-size: clamp(12px, 3vw, 14px); font-weight: 500; color: #1e3a8a; }
+        .church-score-value { display: flex; align-items: center; gap: clamp(8px, 2vw, 12px); }
+        .church-score-percent { font-weight: 700; font-size: clamp(16px, 4vw, 20px); }
+        .global-score {
+            background: linear-gradient(to right, #2563eb, #1e40af);
+            color: white;
+            padding: clamp(24px, 6vw, 32px);
+            border-radius: 16px;
+            text-align: center;
+            margin-top: clamp(24px, 6vw, 32px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+        .global-score-icon {
+            display: inline-block;
+            padding: clamp(8px, 2vw, 12px);
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            margin-bottom: clamp(8px, 2vw, 12px);
+        }
+        .global-score-icon svg { width: clamp(24px, 6vw, 32px); height: clamp(24px, 6vw, 32px); fill: white; }
+        .global-score h3 {
+            font-size: clamp(18px, 5vw, 24px);
+            font-weight: 700;
+            margin-bottom: clamp(8px, 2vw, 12px);
+            color: white;
+        }
+        .global-score-value { font-size: clamp(48px, 15vw, 72px); font-weight: 900; margin-bottom: clamp(4px, 1vw, 8px); }
+        .global-score-text { font-size: clamp(13px, 3.5vw, 16px); font-weight: 500; opacity: 0.9; }
+        #download-btn {
+            margin-top: clamp(16px, 4vw, 24px);
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            font-weight: 700;
+            padding: clamp(16px, 4vw, 20px);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 12px);
+            font-size: clamp(14px, 4vw, 18px);
+            border: none;
+            cursor: pointer;
+        }
+        #download-btn:hover { background-color: #1e40af; transform: scale(1.02); }
+        #download-btn svg { width: clamp(20px, 5vw, 24px); height: clamp(20px, 5vw, 24px); fill: white; }
+        .color-red { color: #dc2626; fill: #dc2626; stroke: #dc2626; }
+        .color-orange { color: #f97316; fill: #f97316; stroke: #f97316; }
+        .color-blue { color: #2563eb; fill: #2563eb; stroke: #2563eb; }
+        .color-green { color: #16a34a; fill: #16a34a; stroke: #16a34a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="evaluation-form">
+            <div class="header">
+                <div class="header-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </div>
+                <h1>Mon Évaluation Personnelle</h1>
+                <p class="subtitle">Prenez un moment pour vous évaluer</p>
+            </div>
+            <div class="questions">
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-left">
+                            <div class="question-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div>
+                            <div><div class="question-title">Ma vie spirituelle</div><div class="question-subtitle">Connexion avec le divin</div></div>
+                        </div>
+                        <div class="status-badge">
+                            <svg id="smiley-spiritual" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="status-text color-blue" id="status-spiritual">Bon</span>
+                        </div>
+                    </div>
+                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-spiritual" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="slider-spiritual"></div>
+                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-spiritual">50%</div><span class="slider-label">100%</span></div>
+                </div>
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-left">
+                            <div class="question-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                            <div><div class="question-title">Ma vie sociale</div><div class="question-subtitle">Relations et communauté</div></div>
+                        </div>
+                        <div class="status-badge">
+                            <svg id="smiley-social" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="status-text color-blue" id="status-social">Bon</span>
+                        </div>
+                    </div>
+                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-social" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="slider-social"></div>
+                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-social">50%</div><span class="slider-label">100%</span></div>
+                </div>
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-left">
+                            <div class="question-icon"><svg viewBox="0 0 24 24" fill="none"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                            <div><div class="question-title">Ma vie financière</div><div class="question-subtitle">Stabilité et prospérité</div></div>
+                        </div>
+                        <div class="status-badge">
+                            <svg id="smiley-financial" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="status-text color-blue" id="status-financial">Bon</span>
+                        </div>
+                    </div>
+                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-financial" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="slider-financial"></div>
+                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-financial">50%</div><span class="slider-label">100%</span></div>
+                </div>
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-left">
+                            <div class="question-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M10 2v6L8 10v12h3v-7h2v7h3V10l-2-2V2h-4z"/></svg></div>
+                            <div><div class="question-title">Ma présence à l'église</div><div class="question-subtitle">Engagement dans la communauté</div></div>
+                        </div>
+                    </div>
+                    <div class="church-options">
+                        <button class="church-btn active" data-value="aucun"><span class="church-emoji">❌</span>Aucun culte</button>
+                        <button class="church-btn" data-value="mercredi"><span class="church-emoji">📅</span>Mercredi</button>
+                        <button class="church-btn" data-value="weekend"><span class="church-emoji">🎉</span>Weekend</button>
+                        <button class="church-btn" data-value="mercredi_weekend"><span class="church-emoji">⭐</span>Mercredi & Weekend</button>
+                    </div>
+                    <div class="church-score">
+                        <div class="church-score-header">
+                            <span class="church-score-label">Score de présence</span>
+                            <div class="church-score-value">
+                                <svg id="smiley-church" class="color-red" viewBox="0 0 24 24" style="width: clamp(20px, 5vw, 24px); height: clamp(20px, 5vw, 24px);"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 16s1.5-2 4-2 4 2 4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                <span class="church-score-percent color-red" id="church-score">0%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar" style="height: clamp(10px, 2.5vw, 12px);"><div class="progress-fill" id="progress-church" style="width: 0%"></div></div>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-left">
+                            <div class="question-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+                            <div><div class="question-title">Suis-je un membre actif ?</div><div class="question-subtitle">Implication et service</div></div>
+                        </div>
+                        <div class="status-badge">
+                            <svg id="smiley-active" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="status-text color-blue" id="status-active">Bon</span>
+                        </div>
+                    </div>
+                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-active" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="slider-active"></div>
+                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-active">50%</div><span class="slider-label">100%</span></div>
+                </div>
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-left">
+                            <div class="question-icon"><svg viewBox="0 0 24 24" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                            <div><div class="question-title">Ma santé physique</div><div class="question-subtitle">Corps et vitalité</div></div>
+                        </div>
+                        <div class="status-badge">
+                            <svg id="smiley-physical" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="status-text color-blue" id="status-physical">Bon</span>
+                        </div>
+                    </div>
+                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-physical" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="slider-physical"></div>
+                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-physical">50%</div><span class="slider-label">100%</span></div>
+                </div>
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-left">
+                            <div class="question-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M9.5 2A2.5 2.5 0 0 0 7 4.5v15A2.5 2.5 0 0 0 9.5 22h5a2.5 2.5 0 0 0 2.5-2.5v-15A2.5 2.5 0 0 0 14.5 2h-5z"/><path d="M12 18h.01"/></svg></div>
+                            <div><div class="question-title">Ma santé émotionnelle</div><div class="question-subtitle">Équilibre mental</div></div>
+                        </div>
+                        <div class="status-badge">
+                            <svg id="smiley-emotional" class="color-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span class="status-text color-blue" id="status-emotional">Bon</span>
+                        </div>
+                    </div>
+                    <div class="slider-container"><div class="progress-bar"><div class="progress-fill" id="progress-emotional" style="width: 50%"></div></div><input type="range" min="0" max="100" value="50" id="slider-emotional"></div>
+                    <div class="slider-labels"><span class="slider-label">0%</span><div class="percentage-badge" id="percent-emotional">50%</div><span class="slider-label">100%</span></div>
+                </div>
+            </div>
+            <div class="global-score">
+                <div class="global-score-icon"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div>
+                <h3>Score Global</h3>
+                <div class="global-score-value" id="global-score">50%</div>
+                <p class="global-score-text">Votre niveau de bien-être global</p>
+            </div>
+        </div>
+        <button id="download-btn">
+            <svg viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/></svg>
+            Télécharger mon évaluation
+        </button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+    // État du formulaire
+    const state = {
+        spiritual: 50,
+        social: 50,
+        financial: 50,
+        church: 'aucun',
+        activeMember: 50,
+        physical: 50,
+        emotional: 50
+    };
+
+    // Fonction pour obtenir le texte du statut
+    function getStatusText(value) {
+        if (value < 25) return 'Très faible';
+        if (value < 50) return 'Faible';
+        if (value < 75) return 'Bon';
+        return 'Très bon';
+    }
+
+    // Fonction pour obtenir la couleur du statut
+    function getStatusColor(value) {
+        if (value < 25) return 'color-red';
+        if (value < 50) return 'color-orange';
+        if (value < 75) return 'color-blue';
+        return 'color-green';
+    }
+
+    // Fonction pour obtenir le SVG du smiley
+    function getSmileyPath(value) {
+        if (value < 25) {
+            return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 16s1.5-2 4-2 4 2 4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+        } else if (value < 50) {
+            return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><line x1="8" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+        } else {
+            return '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 14s1.5 2 4 2 4-2 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+        }
+    }
+
+    // Fonction pour obtenir le score de l'église
+    function getChurchScore(attendance) {
+        const scores = {
+            'aucun': 0,
+            'mercredi': 33,
+            'weekend': 66,
+            'mercredi_weekend': 100
+        };
+        return scores[attendance] || 0;
+    }
+
+    // Fonction pour mettre à jour un slider
+    function updateSlider(field, value) {
+        state[field] = parseInt(value);
+        
+        document.getElementById('progress-' + field).style.width = value + '%';
+        document.getElementById('percent-' + field).textContent = value + '%';
+        
+        const statusEl = document.getElementById('status-' + field);
+        statusEl.textContent = getStatusText(value);
+        statusEl.className = 'status-text ' + getStatusColor(value);
+        
+        const smileyEl = document.getElementById('smiley-' + field);
+        smileyEl.innerHTML = getSmileyPath(value);
+        smileyEl.className = getStatusColor(value);
+        
+        updateGlobalScore();
+    }
+
+    // Fonction pour mettre à jour le score de l'église
+    function updateChurchScore() {
+        const score = getChurchScore(state.church);
+        
+        document.getElementById('progress-church').style.width = score + '%';
+        
+        const scoreEl = document.getElementById('church-score');
+        scoreEl.textContent = score + '%';
+        scoreEl.className = 'church-score-percent ' + getStatusColor(score);
+        
+        const smileyEl = document.getElementById('smiley-church');
+        smileyEl.innerHTML = getSmileyPath(score);
+        smileyEl.className = getStatusColor(score);
+        smileyEl.style.width = 'clamp(20px, 5vw, 24px)';
+        smileyEl.style.height = 'clamp(20px, 5vw, 24px)';
+        
+        updateGlobalScore();
+    }
+
+    // Fonction pour mettre à jour le score global
+    function updateGlobalScore() {
+        const churchScore = getChurchScore(state.church);
+        const total = (
+            state.spiritual + 
+            state.social + 
+            state.financial + 
+            churchScore + 
+            state.activeMember + 
+            state.physical + 
+            state.emotional
+        ) / 7;
+        
+        document.getElementById('global-score').textContent = Math.round(total) + '%';
+    }
+
+    // Initialiser les sliders
+    const sliders = ['spiritual', 'social', 'financial', 'activeMember', 'physical', 'emotional'];
+    sliders.forEach(function(field) {
+        const slider = document.getElementById('slider-' + field);
+        if (slider) {
+            slider.addEventListener('input', function(e) {
+                updateSlider(field, e.target.value);
+            });
+        }
+    });
+
+    // Initialiser les boutons d'église
+    const churchBtns = document.querySelectorAll('.church-btn');
+    churchBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            churchBtns.forEach(function(b) {
+                b.classList.remove('active');
+            });
+            btn.classList.add('active');
+            state.church = btn.getAttribute('data-value');
+            updateChurchScore();
+        });
+    });
+
+    // Fonction de téléchargement
+    document.getElementById('download-btn').addEventListener('click', async function() {
+        const downloadBtn = document.getElementById('download-btn');
+        downloadBtn.style.display = 'none';
+        
+        try {
+            const canvas = await html2canvas(document.getElementById('evaluation-form'), {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                logging: false,
+                useCORS: true
+            });
+            
+            const link = document.createElement('a');
+            link.download = 'mon-evaluation-personnelle.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Erreur lors du téléchargement. Veuillez réessayer.');
+        } finally {
+            downloadBtn.style.display = 'flex';
+        }
+    });
+
+    // Initialiser le score global au chargement
+    updateGlobalScore();
+</script>
+</body>
+</html>
